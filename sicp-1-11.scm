@@ -1,0 +1,13 @@
+(define (f1 x)
+  (cond ((< x 3) x)
+        (else (+ (f1 (- x 1))
+                 (* 2 (f1 (- x 2)))
+                 (* 3 (f1 (- x 3)))))))
+(f1 5)
+(define (f-iter a b c n)
+  (if (<= n 0) a (f-iter b c
+        (+ (* 3 a)
+           (* 2 b)
+           c) (- n 1))))
+(define (f n) (f-iter 0 1 2 n))
+(f 5) 
