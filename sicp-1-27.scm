@@ -1,0 +1,26 @@
+(define (expmod b e m)
+  (cond ((= e 0) 1)
+        ((even? e) (% (square (expmod b (/ e 2) m)) m))
+        (else (% (* b (expmod b (- e 1) m)) m))))
+(define (square x)
+  (* x x))
+(define (even? x)
+  (= (% x 2) 0))
+
+(define (fermat-test n)
+  (test-it n (+ 1 (random (- n 1)))))
+(define (test-it n a)
+  (= (expmod a n n) a))
+
+
+(define (fermat-check n)
+  (check-it n 2))
+(define (check-it n cnt)
+  (cond ((= cnt n) true)
+        ((test-it n cnt) (check-it n (+ cnt 1)))
+        (else false)))
+
+(fermat-check 561)
+(fermat-check 1105)
+(fermat-check 1729)
+(fermat-check 2465)
