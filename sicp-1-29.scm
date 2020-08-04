@@ -75,6 +75,8 @@
 (sum-cubes2 3 5)
 (* 8 (pi-sum2 1 1000))
 
+(integral cube 0.0 1.0 0.01)
 (integral cube 0.0 1.0 0.001)
+(simpson cube 0.0 1.0 100)
 (simpson cube 0.0 1.0 1000)
 
