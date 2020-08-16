@@ -17,7 +17,7 @@
 (define (fix f g t)
   ((iter-improve
     (lambda (x) (< (abs (- x (f x))) t))
-    (lambda (x) (f x))) g))
+    f) g))
 
 (define (avg-damp f)
   (lambda (x) (/ (+ x (f x)) 2)))
