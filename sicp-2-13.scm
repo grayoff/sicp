@@ -89,6 +89,11 @@
 (tolerance (mul b c))
 (tolerance (mul c d))
 
+;t = (t0 + t1)/(t0 t1 + 1)
+(let ((t0 (tolerance b))
+      (t1 (tolerance c)))
+  (/ (+ t0 t1) (+ (* t0 t1) 1)))
+
 (define (round2 x)
   (/ (round (* x 100)) 100.0))
 
