@@ -7,6 +7,12 @@
 
 (define (rev2 a)
   (foldl cons '() a))
+
+(define (rev3 a)
+  (let ((b (cdr a)))
+    (if (empty? b)
+        a
+        (append (rev3 b) (list (car a))))))
           
 (define a (list 1 2 3 4))
 (define sq (list 0 1 4 9 16 25))
@@ -14,6 +20,7 @@
 (rev a)
 (rev sq)
 (rev2 sq)
+(rev3 sq)
 
 (define sa string-append)
 (sa "a" (sa "b" (sa "c" "")))
