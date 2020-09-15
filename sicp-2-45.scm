@@ -51,6 +51,16 @@
   (let ((combine4 (square-of-four flip-horiz identity rotate180 flip-vert)))
     (combine4 (corner-split painter n))))
 
+(define (split comb1 comb2)
+  (define (iter painter n)
+    (if (= n 0)
+        painter
+        (let ((smaller (iter painter (- n 1))))
+        (comb1 painter (comb2 smaller smaller)))))
+  iter)
+
+(define right-split2 (split beside below))
+(define up-split2 (split below beside))
 
 (paint einstein)
 (paint (beside einstein mark-of-zorro))
@@ -67,3 +77,6 @@
 (paint (square-limit einstein 4))
 (paint (square-limit mark-of-zorro 4))
 (paint (square-limit2 einstein 4))
+(paint (right-split2 einstein 4))
+(paint (up-split2 einstein 4))
+
