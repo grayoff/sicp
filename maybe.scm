@@ -16,9 +16,6 @@
       (f (car m))
       m))
 
-(define (lift m f)
-  (lambda (x) (fmap x f)))
-  
 (define (value-or m v)
   (if (has-value? m) (value m) v))
 
