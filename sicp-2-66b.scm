@@ -13,7 +13,7 @@
 
 (define (bind m f)
   (if (has-value? m)
-      (f (car m))
+      (f (value m))
       m))
 
 (define (value-or m v)
