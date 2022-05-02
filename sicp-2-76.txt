@@ -1,0 +1,24 @@
+- Explicit dispatch on type
+	- New Operation
+		- add implementations for all types
+		- add generic procedure
+	- New Type
+		- add constuctors and selectors
+		- add type and type check procedure
+		- mod generic procedure
+
+- Data-directed
+	- New Operation // Better 
+		- add generic procedure (call to apply-generic)
+		- add and register implementations (in all packages or in extension package or in procedure itself)
+	- New Type
+		- add package
+		- add type
+		- add and register constuctors and selectors implementations
+
+- Message passing
+	- New Operation
+		- mod all types constuctors
+		- add generic procedure (call to apply-generic)
+	- New Type // Better
+		- add type constructor
