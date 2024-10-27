@@ -25,8 +25,41 @@
             (get-from-table (cdr t)))))
   (get-from-table table))
 
-(define (apply-generic op . args)
+(define (apply-generic1 op . args)
   (apply (get op (map type-tag args)) (map contents args)))
+
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+        (apply proc (map contents args))
+        (let ((max-level (apply max (map tower-level type-tags)))
+              (min-level (apply min (map tower-level type-tags))))
+          (if (equal? max-level min-level)
+              (error "No op found 1" (list op type-tags))
+              (apply apply-generic (cons op (map (lambda (x) (raise-to max-level x)) args)))))))))
+
+
+;---
+
+(define tower '())
+
+(define (tower-set type level)
+  (set! tower (cons (list type level) tower)))
+  
+(define (tower-level type)
+  (define (get-from-tower t)
+    (if (eq? t '())
+        #f
+        (if (equal? (caar t) type)
+            (cadar t)
+            (get-from-tower (cdr t)))))
+  (get-from-tower tower))
+
+(define (raise-to level arg)
+  (if (<= level (tower-level (type-tag arg)))
+      arg
+      (raise arg)))
 
 ;---
 
@@ -51,6 +84,9 @@
   (put '=zero? '(integer) (lambda (x) (tag (= x 0))))
   (put 'make '(integer) (lambda (x) (tag x)))
   (put 'raise '(integer) (lambda (x) (make-rational x 1)))
+
+  (tower-set 'integer 1)
+  
   'done)
 
 (define (make-integer x)
@@ -107,6 +143,9 @@
   (put '=zero? '(rational) (lambda (x) (=zero-rat? x)))
   (put 'make '(rational) (lambda (n d) (tag (make-rat n d))))
   (put 'raise '(rational) (lambda (x) (make-real (/ (numer x) (denom x)))))
+
+  (tower-set 'rational (+ (tower-level 'integer) 1))
+  
   'done)
 
 (define (make-rational n d)
@@ -124,6 +163,9 @@
   (put '=zero? '(real) (lambda (x) (tag (= x 0))))
   (put 'make '(real) (lambda (x) (tag x)))
   (put 'raise '(real) (lambda (x) (make-complex-from-real-imag x 0)))
+
+  (tower-set 'real (+ (tower-level 'rational) 1))
+  
   'done)
 
 (define (make-real x)
@@ -175,6 +217,9 @@
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
   (put 'angle '(complex) angle)
+
+  (tower-set 'complex (+ (tower-level 'real) 1))
+
   'done)
 
 (define (make-complex-from-real-imag x y)
@@ -269,3 +314,9 @@ a
 b
 c
 d
+"---"
+(add a b)
+(add a c)
+(add a d)
+
+; (real-part a) - special operators still not common, so additional work required to repair this
